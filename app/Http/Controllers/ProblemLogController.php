@@ -8,18 +8,80 @@ use App\Models\LogProblem;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use App\Exports\ProblemLogExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProblemLogController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $title = 'Problem Log';
-        $getProblem = LogProblem::with(['categoryDetail', 'lineDetail'])->latest('id')->paginate('10');
+
+        $request->validate([
+            'search' => 'nullable|string|max:255',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+        ]);
+
+        $query = LogProblem::with([
+            'lineDetail',
+            'categoryDetail'
+        ]);
+
+        // SEARCH
+        if ($request->filled('search')) {
+
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+
+                $q->where('problem', 'like', "%{$search}%")
+
+                    ->orWhereHas('lineDetail', function ($q) use ($search) {
+                        $q->where('line', 'like', "%{$search}%");
+                    })
+
+                    ->orWhereHas('categoryDetail', function ($q) use ($search) {
+                        $q->where('category', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        // FILTER TANGGAL AWAL
+        if ($request->filled('start_date')) {
+
+            $query->whereDate(
+                'start_problem',
+                '>=',
+                $request->start_date
+            );
+        }
+
+        // FILTER TANGGAL AKHIR
+        if ($request->filled('end_date')) {
+
+            $query->whereDate(
+                'start_problem',
+                '<=',
+                $request->end_date
+            );
+        }
+
+        $getProblem = $query
+            ->orderByDesc('start_problem')
+            ->paginate(10)
+            ->withQueryString();
+
+
+
+
         $getCategory = Category::all();
         $getLine = Line::all();
+
+
         return view('pages.problem-log.index', compact('title', 'getProblem', 'getCategory', 'getLine'));
     }
 
@@ -38,14 +100,18 @@ class ProblemLogController extends Controller
     {
         try {
             // $exists = LogProblem::where('line', $request->line)->exists();
+            $username = session('username');
+            $name = session('name');
+            $npk = session('npk');
 
             LogProblem::create([
-                'npk' => "1225",
+                'npk' => $npk,
                 'problem' => $request->problem,
                 'category' => $request->category,
                 'line' => $request->line,
                 'status' => 0,
-                'start_problem' => Carbon::now('Asia/Jakarta'),
+                'start_problem' => $request->start_problem,
+                'created_by' => $npk,
                 'created_at' => Carbon::now('Asia/Jakarta'),
             ]);
 
@@ -121,11 +187,38 @@ class ProblemLogController extends Controller
         //
     }
 
+
+    public function export(Request $request)
+    {
+        $filters = $request->validate([
+            'search' => 'nullable|string|max:255',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+        ]);
+
+        $filename = 'Problem_Log_' .
+            now('Asia/jakarta')->format('Ymd_His') .
+            '.xlsx';
+
+        return Excel::download(
+            new ProblemLogExport($filters),
+            $filename
+        );
+    }
+
+
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $problem = LogProblem::findOrFail($id);
+            $problem->delete();
+
+            return redirect()->back()->with('success', 'Log Problem berhasil dihapus!');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Gagal menghapus data: ' . $e->getMessage());
+        }
     }
 }

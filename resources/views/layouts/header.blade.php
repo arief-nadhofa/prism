@@ -15,6 +15,7 @@
 
     <!-- Jika belum ada Alpine.js di bundle Vite/Tailwind, pasang via CDN ini -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
@@ -62,23 +63,16 @@
                         <i class="fa-solid fa-chart-simple text-base w-5 text-center {{ request()->routeIs('problem-log.*') ? 'text-indigo-700' : 'text-slate-400' }}"></i>
                         <span>Problem Log</span>
                     </a>
-
-                    <a href="{{ route('report.index') }}"
-                        class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm transition {{ request()->routeIs('report.*') ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:text-indigo-600 hover:bg-slate-50' }}">
-                        <i class="fa-solid fa-chart-simple text-base w-5 text-center {{ request()->routeIs('report.*') ? 'text-indigo-700' : 'text-slate-400' }}"></i>
-                        <span>Report</span>
-                    </a>
-
                     <p class="px-3 text-xs font-semibold uppercase tracking-wider text-slate-400 mt-6 mb-2">Pengaturan</p>
 
                     <a href="{{ route('line.index') }}"
                         class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm transition {{ request()->routeIs('line.*') ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:text-indigo-600 hover:bg-slate-50' }}">
-                        <i class="fa-solid fa-cogs text-base w-5 text-center {{ request()->routeIs('report.*') ? 'text-indigo-700' : 'text-slate-400' }}"></i>
+                        <i class="fa-solid fa-cogs text-base w-5 text-center {{ request()->routeIs('line.*') ? 'text-indigo-700' : 'text-slate-400' }}"></i>
                         <span>Line</span>
                     </a>
                     <a href="{{ route('category.index') }}"
                         class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm transition {{ request()->routeIs('category.*') ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:text-indigo-600 hover:bg-slate-50' }}">
-                        <i class="fa-solid fa-cogs text-base w-5 text-center {{ request()->routeIs('report.*') ? 'text-indigo-700' : 'text-slate-400' }}"></i>
+                        <i class="fa-solid fa-cogs text-base w-5 text-center {{ request()->routeIs('category.*') ? 'text-indigo-700' : 'text-slate-400' }}"></i>
                         <span>Category</span>
                     </a>
                 </nav>
@@ -91,8 +85,8 @@
                         AD
                     </div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-sm font-semibold text-slate-800 truncate">Administrator</p>
-                        <p class="text-xs text-slate-500 truncate">admin@company.com</p>
+                        <p class="text-sm font-semibold text-slate-800 truncate">{{ session('name') }}</p>
+                        <p class="text-xs text-slate-500 truncate">{{ session('npk') }}</p>
                     </div>
                 </div>
             </div>

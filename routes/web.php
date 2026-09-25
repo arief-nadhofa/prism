@@ -17,13 +17,17 @@ Route::post('proses-logout', [AuthController::class, 'proses_logout'])->name('pr
 
 Route::get('dashboard', [LayoutController::class, 'dashboard'])->name('dashboard');
 
+Route::get(
+    '/problem-log/export',
+    [ProblemLogController::class, 'export']
+)->name('problem-log.export');
+
 Route::resource('problem-log', ProblemLogController::class);
 // Halaman detail log problem
 Route::get('/problem-log/{id}', [ProblemLogController::class, 'show'])->name('problem-log.show');
 
 // Action untuk submit penutupan/close problem
 Route::put('/problem-log/{id}/close', [ProblemLogController::class, 'closeProblem'])->name('problem-log.close');
-
 
 Route::resource('line', LineController::class);
 

@@ -114,6 +114,10 @@
                 </tbody>
             </table>
 
+            <div class="mt-6 flex justify-center">
+                {{ $getLine->withQueryString()->links() }}
+            </div>
+
             <!-- Modal Container -->
             <div id="modal-tambah" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
 

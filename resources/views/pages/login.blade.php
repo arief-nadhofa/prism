@@ -19,24 +19,32 @@
                 <!-- Header / Logo -->
                 <div class="text-center mb-8">
                     <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-600/30 mb-4">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                        </svg>
+                        PRISM
                     </div>
-                    <h1 class="text-2xl font-bold tracking-tight text-slate-900">Selamat Datang Kembali</h1>
+                    <h1 class="text-2xl font-bold tracking-tight text-slate-900">Problem Issue & Incident Management</h1>
                     <p class="text-sm text-slate-500 mt-1">Masuk dengan akun laptop/PC anda</p>
                 </div>
 
-                <!-- Session Alert / Error Global -->
-                @if (session('status'))
-                <div class="mb-4 p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm">
-                    {{ session('status') }}
+                @if (session('success'))
+                <div class="mb-5 flex items-center p-4 text-emerald-800 bg-emerald-50 border border-emerald-200 rounded-xl shadow-xs" role="alert">
+                    <svg class="w-5 h-5 me-3 shrink-0 text-emerald-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div class="text-sm font-medium">
+                        {{ session('success') }}
+                    </div>
                 </div>
                 @endif
 
-                @if ($errors->any())
-                <div class="mb-4 p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-sm">
-                    Mohon periksa kembali input yang Anda masukkan.
+                <!-- Alert Gagal / Exception (Error) -->
+                @if (session('error'))
+                <div class="mb-5 flex items-center p-4 text-rose-800 bg-rose-50 border border-rose-200 rounded-xl shadow-xs" role="alert">
+                    <svg class="w-5 h-5 me-3 shrink-0 text-rose-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div class="text-sm font-medium">
+                        {{ session('error') }}
+                    </div>
                 </div>
                 @endif
 
@@ -55,10 +63,8 @@
                             required
                             autofocus
                             placeholder="arief.nadhofa"
-                            class="w-full px-4 py-2.5 rounded-xl border @error('email') border-rose-500 focus:ring-rose-500 @else border-slate-300 focus:border-blue-600 focus:ring-blue-600/20 @enderror bg-slate-50/50 text-slate-900 text-sm focus:outline-none focus:ring-4 transition duration-200">
-                        @error('email')
-                        <p class="text-xs text-rose-600 mt-1.5">{{ $message }}</p>
-                        @enderror
+                            class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:border-blue-600 focus:ring-blue-600/20 bg-slate-50/50 text-slate-900 text-sm focus:outline-none focus:ring-4 transition duration-200">
+
                     </div>
 
                     <!-- Password Input -->
