@@ -24,9 +24,8 @@ return new class extends Migration
             $table->dateTime('start_problem')->nullable();
             $table->dateTime('finish_problem')->nullable();
             $table->string('duration')->nullable();
+            $table->string('created_by')->nullable(); // Sesuai tipe datetime di diagram
             $table->dateTime('created_at')->nullable();
-            $table->dateTime('created_by')->nullable(); // Sesuai tipe datetime di diagram
-
         });
     }
 

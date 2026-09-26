@@ -75,9 +75,6 @@ class ProblemLogController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-
-
-
         $getCategory = Category::all();
         $getLine = Line::all();
 
@@ -104,14 +101,36 @@ class ProblemLogController extends Controller
             $name = session('name');
             $npk = session('npk');
 
+            // 1. Siapkan variabel untuk menyimpan path lampiran (default null jika tidak diisi)
+            $lampiranPaths = [
+                'attachment_1' => null,
+                'attachment_2' => null,
+                'attachment_3' => null,
+            ];
+
+            // 2. Proses upload untuk 3 attachment langsung dari $request
+            for ($i = 1; $i <= 3; $i++) {
+                $fileKey = 'attachment_' . $i;
+
+                if ($request->hasFile($fileKey)) {
+                    // Simpan file ke storage/app/public/lampiran
+                    $lampiranPaths[$fileKey] = $request->file($fileKey)->store('lampiran', 'public');
+                }
+            }
+
             LogProblem::create([
-                'npk' => $npk,
+                'npk' => "1225",
                 'problem' => $request->problem,
                 'category' => $request->category,
                 'line' => $request->line,
                 'status' => 0,
                 'start_problem' => $request->start_problem,
-                'created_by' => $npk,
+                // Masukkan hasil path lampiran
+                'attachment_1' => $lampiranPaths['attachment_1'],
+                'attachment_2' => $lampiranPaths['attachment_2'],
+                'attachment_3' => $lampiranPaths['attachment_3'],
+
+                'created_by' => "1225",
                 'created_at' => Carbon::now('Asia/Jakarta'),
             ]);
 
